@@ -20,7 +20,7 @@ int main(void) {
     unsigned char tempA = 0x00;
     unsigned char out = 0x00;
     while (1) {
-        tempA = PINA&0x0F;
+        tempA = (~PINA)&0x0F;
         out = ((tempA<5)<<6) + ((tempA>0)<<5) + ((tempA>2)<<4) +
         ((tempA>4)<<3) + ((tempA>6)<<2) + ((tempA>9)<<1) + (tempA>12);
         PORTC = out;
