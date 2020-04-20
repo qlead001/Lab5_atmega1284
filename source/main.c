@@ -1,8 +1,8 @@
 /*	Author: Quinn Leader qlead001@ucr.edu
  *  Partner(s) Name: NA
  *	Lab Section: 026
- *	Assignment: Lab 5  Exercise 1
- *	Exercise Description: Lab 3 Exercise 2
+ *	Assignment: Lab 5  Exercise 2
+ *	Exercise Description: Lab 4 Exercise 2 but it starts at 0
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -12,18 +12,54 @@
 #include "simAVRHeader.h"
 #endif
 
+enum States {
+    Start,
+    Press,
+    Release,
+} state;
+
+unsigned char count;
+
+void Tick() {
+    switch(state) { // Transitions
+        case Start:
+            state = Press;
+            count = 0;
+            break;
+        case Press:
+            if ((~PINA)&0x03) {
+                state = Release;
+                if (((~PINA)&0x03) == 0x03) count = 0;
+                else if (((~PINA)&0x03) == 0x01 && count < 9) count++;
+                else if (((~PINA)&0x03) == 0x02 && count > 0) count--;
+            }
+            break;
+        case Release:
+            if (((~PINA)&0x03) == 0x03) count = 0;
+            if (!((~PINA)&0x03)) state = Press;
+            break;
+        default:
+            state = Start;
+            break;
+    } // Transitions
+
+    switch(state) { // State Actions
+        case Start:
+            break;
+        default:
+            break;
+    } // State Actions
+
+    PORTC = count;
+}
+
 int main(void) {
     /* Insert DDR and PORT initializations */
     DDRA = 0x00; PORTA = 0xFF;
     DDRC = 0xFF; PORTC = 0x00;
     /* Insert your solution below */
-    unsigned char tempA = 0x00;
-    unsigned char out = 0x00;
     while (1) {
-        tempA = (~PINA)&0x0F;
-        out = ((tempA<5)<<6) + ((tempA>0)<<5) + ((tempA>2)<<4) +
-        ((tempA>4)<<3) + ((tempA>6)<<2) + ((tempA>9)<<1) + (tempA>12);
-        PORTC = out;
+        Tick();
     }
     return 1;
 }

@@ -26,71 +26,71 @@
 echo ======================================================\n
 echo Running all tests..."\n\n
 
-test "PINA: 0x00 => PORTC: 7, state: Press"
+test "PINA: 0xFF => PORTC: 7, state: Press"
 set state = Release
 set count = 0x07
-setPINA 0x00
+setPINA 0xFF
 continue 7
 expectPORTC 7
 expect state Press
 checkResult
 
-test "PINA: 0x01 => PORTC: 8, state: Release"
+test "PINA: 0xFE => PORTC: 8, state: Release"
 set state = Press
 set count = 0x07
-setPINA 0x01
+setPINA 0xFE
 continue 7
 expectPORTC 8
 expect state Release
 checkResult
 
-test "PINA: 0x02 => PORTC: 6, state: Release"
+test "PINA: 0xFD => PORTC: 6, state: Release"
 set state = Press
 set count = 0x07
-setPINA 0x02
+setPINA 0xFD
 continue 7
 expectPORTC 6
 expect state Release
 checkResult
 
-test "PINA: 0x03 => PORTC: 6, state: Release"
+test "PINA: 0xFC => PORTC: 6, state: Release"
 set state = Press
 set count = 0x07
-setPINA 0x03
+setPINA 0xFC
 continue 7
 expectPORTC 0
 expect state Release
 checkResult
 
-test "PINA: 0x01, 0x00, 0x01, 0x00, 0x01 => PORTC: 9, state: Release"
+test "PINA: 0xFE, 0xFF, 0xFE, 0xFF, 0xFE => PORTC: 9, state: Release"
 set state = Release
 set count = 0x07
-setPINA 0x01
+setPINA 0xFE
 continue 2
-setPINA 0x00
+setPINA 0xFF
 continue 2
-setPINA 0x01
+setPINA 0xFE
 continue 2
-setPINA 0x00
+setPINA 0xFF
 continue 2
-setPINA 0x01
+setPINA 0xFE
 continue 5
 expectPORTC 9
 expect state Release
 checkResult
 
-test "PINA: 0x02, 0x00, 0x02, 0x00, 0x02, count: 2 => PORTC: 0, state: Release"
+test "PINA: 0xFD, 0xFF, 0xFD, 0xFF, 0xFD, count: 2 => PORTC: 0, state: Release"
 set state = Release
 set count = 0x02
-setPINA 0x02
+setPINA 0xFD
 continue 2
-setPINA 0x00
+setPINA 0xFF
 continue 2
-setPINA 0x02
+setPINA 0xFD
 continue 2
-setPINA 0x00
+setPINA 0xFF
 continue 2
-setPINA 0x02
+setPINA 0xFD
 continue 5
 expectPORTC 0
 expect state Release

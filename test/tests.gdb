@@ -26,46 +26,74 @@
 echo ======================================================\n
 echo Running all tests..."\n\n
 
-test "PINA: 0xFF => PORTC: 0x40"
+test "PINA: 0xFF => PORTC: 7, state: Press"
+set state = Release
+set count = 0x07
+setPINA 0xFF
+continue 7
+expectPORTC 7
+expect state Press
+checkResult
+
+test "PINA: 0xFE => PORTC: 8, state: Release"
+set state = Press
+set count = 0x07
+setPINA 0xFE
+continue 7
+expectPORTC 8
+expect state Release
+checkResult
+
+test "PINA: 0xFD => PORTC: 6, state: Release"
+set state = Press
+set count = 0x07
+setPINA 0xFD
+continue 7
+expectPORTC 6
+expect state Release
+checkResult
+
+test "PINA: 0xFC => PORTC: 6, state: Release"
+set state = Press
+set count = 0x07
+setPINA 0xFC
+continue 7
+expectPORTC 0
+expect state Release
+checkResult
+
+test "PINA: 0xFE, 0xFF, 0xFE, 0xFF, 0xFE => PORTC: 9, state: Release"
+set state = Release
+set count = 0x07
+setPINA 0xFE
+continue 2
 setPINA 0xFF
 continue 2
-expectPORTC 0x40
+setPINA 0xFE
+continue 2
+setPINA 0xFF
+continue 2
+setPINA 0xFE
+continue 5
+expectPORTC 9
+expect state Release
 checkResult
 
-test "PINA: 0xFD => PORTC: 0x60"
+test "PINA: 0xFD, 0xFF, 0xFD, 0xFF, 0xFD, count: 2 => PORTC: 0, state: Release"
+set state = Release
+set count = 0x02
 setPINA 0xFD
 continue 2
-expectPORTC 0x60
-checkResult
-
-test "PINA: 0xFC => PORTC: 0x70"
-setPINA 0xFC
+setPINA 0xFF
 continue 2
-expectPORTC 0x70
-checkResult
-
-test "PINA: 0xFA => PORTC: 0x38"
-setPINA 0xFA
+setPINA 0xFD
 continue 2
-expectPORTC 0x38
-checkResult
-
-test "PINA: 0xF7 => PORTC: 0x3C"
-setPINA 0xF7
+setPINA 0xFF
 continue 2
-expectPORTC 0x3C
-checkResult
-
-test "PINA: 0xF5 => PORTC: 0x3E"
-setPINA 0xF5
-continue 2
-expectPORTC 0x3E
-checkResult
-
-test "PINA: 0xF0 => PORTC: 0x3F"
-setPINA 0xF0
-continue 2
-expectPORTC 0x3F
+setPINA 0xFD
+continue 5
+expectPORTC 0
+expect state Release
 checkResult
 
 # Report on how many tests passed/tests ran
