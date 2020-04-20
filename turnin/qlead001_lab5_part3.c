@@ -29,13 +29,13 @@ void Tick() {
             indexPatterns = 0;
             break;
         case Press:
-            if (PINA&0x01) {
+            if ((~PINA)&0x01) {
                 state = Release;
 		indexPatterns = (indexPatterns+1)%lenPatterns;
             }
             break;
         case Release:
-            if (!(PINA&0x01)) state = Press;
+            if (!((~PINA)&0x01)) state = Press;
             break;
         default:
             state = Start;
@@ -49,13 +49,13 @@ void Tick() {
             break;
     } // State Actions
 
-    PORTB = patterns[indexPatterns];
+    PORTC = patterns[indexPatterns];
 }
 
 int main(void) {
     /* Insert DDR and PORT initializations */
     DDRA = 0x00; PORTA = 0xFF;
-    DDRB = 0xFF; PORTB = 0x00;
+    DDRC = 0xFF; PORTC = 0x00;
     /* Insert your solution below */
     state = Start;
     while (1) {

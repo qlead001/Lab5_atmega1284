@@ -1,8 +1,8 @@
 /*	Author: Quinn Leader qlead001@ucr.edu
  *  Partner(s) Name: NA
  *	Lab Section: 026
- *	Assignment: Lab 5  Exercise 2
- *	Exercise Description: Lab 4 Exercise 2 but it starts at 0
+ *	Assignment: Lab 5  Exercise 3
+ *	Exercise Description: Festive lights display
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -18,25 +18,24 @@ enum States {
     Release,
 } state;
 
-unsigned char count;
+unsigned char indexPatterns;
+const unsigned char lenPatterns = 15;
+const unsigned char patterns[] = {1,2,4,8,16,32,16,8,4,2,1,21,42,0x3F,0};
 
 void Tick() {
     switch(state) { // Transitions
         case Start:
             state = Press;
-            count = 0;
+            indexPatterns = 0;
             break;
         case Press:
-            if ((~PINA)&0x03) {
+            if ((~PINA)&0x01) {
                 state = Release;
-                if (((~PINA)&0x03) == 0x03) count = 0;
-                else if (((~PINA)&0x03) == 0x01 && count < 9) count++;
-                else if (((~PINA)&0x03) == 0x02 && count > 0) count--;
+		indexPatterns = (indexPatterns+1)%lenPatterns;
             }
             break;
         case Release:
-            if (((~PINA)&0x03) == 0x03) count = 0;
-            if (!((~PINA)&0x03)) state = Press;
+            if (!((~PINA)&0x01)) state = Press;
             break;
         default:
             state = Start;
@@ -50,7 +49,7 @@ void Tick() {
             break;
     } // State Actions
 
-    PORTC = count;
+    PORTC = patterns[indexPatterns];
 }
 
 int main(void) {
@@ -58,6 +57,7 @@ int main(void) {
     DDRA = 0x00; PORTA = 0xFF;
     DDRC = 0xFF; PORTC = 0x00;
     /* Insert your solution below */
+    state = Start;
     while (1) {
         Tick();
     }
